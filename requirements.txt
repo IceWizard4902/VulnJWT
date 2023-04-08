@@ -1,0 +1,6 @@
+pyjwt
+Flask
+Flask-SQLAlchemy
+Flask-WTF
+passlib
+psycopg2-binary

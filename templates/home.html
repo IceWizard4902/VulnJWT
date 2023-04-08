@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold">VulnJWT</h1>
+      <p class="col-md-8 fs-4">A application to demonstrate some of the vulnerabilities related to dealing with JWT tokens under the guise of a blog page.</p>
+      {% if session.logged_in == NULL %}
+      <a href="/register" class="btn btn-primary btn-lg">Register</a>
+      <a href="/login" class="btn btn-success btn-lg">Login</a>
+      {% endif %}
+    </div>
+</div>
+{% endblock %}
