@@ -1,7 +1,7 @@
 import jwt 
 
 class SafeJWT: 
-    def __init__(self, jwk_whitelist = None, jku_whitelist = None, kid_whitelist = None, verbose = True):
+    def __init__(self, jwk_whitelist = None, jku_whitelist = None, kid_whitelist = None):
         """
         Initialises the whitelists for the web application
         Parameters:
@@ -30,9 +30,13 @@ class SafeJWT:
         Returns:
         A JSON Web Token, or raise exceptions if there is some checks that does not pass
         """
-        
         # Checks for the publicly available JWT Secrets
-        if key in self.common_secret:
+        in_common_secret = False 
+        for secret in self.common_secret:
+            if key == secret:
+                in_common_secret = True 
+        
+        if in_common_secret:
             raise RuntimeError("Use of publicly known JWT secret!")
         
         return jwt.encode(payload, key, algorithm, headers, json_encoder)
@@ -42,19 +46,34 @@ class SafeJWT:
         """
         Checks if the specified jwk parameter is in the whitelist
         """
-        return payload in self.jwk_whitelist
+        in_jwk_whitelist = False 
+        for key in self.jwk_whitelist:
+            if key == payload:
+                in_jwk_whitelist = True 
+        
+        return in_jwk_whitelist
     
     def __check_jku_whitelist(self, payload):
         """
         Checks if the specified jku parameter is in the whitelist
         """
-        return payload in self.jku_whitelist
+        in_jku_whitelist = False 
+        for key in self.jku_whitelist:
+            if key == payload:
+                in_jku_whitelist = True 
+        
+        return in_jku_whitelist
 
     def __check_kid_whitelist(self, payload):
         """
         Checks if the specified kid parameter is in the whitelist
         """
-        return payload in self.kid_whitelist
+        in_kid_whitelist = False 
+        for key in self.kid_whitelist:
+            if key == payload:
+                in_kid_whitelist = True 
+        
+        return in_kid_whitelist
 
     def decode(self, jwt_token, key="", algorithms=None, options=None, audience=None, issuer=None, leeway=0):
         """

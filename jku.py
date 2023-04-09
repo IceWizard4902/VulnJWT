@@ -2,6 +2,10 @@ import jwt
 from jwt import PyJWKClient
 import time
 
+import safejwt 
+
+safejwt_sign = safejwt.SafeJWT(jku_whitelist=['http://localhost:5000/public_keys.json'])
+
 # Implements the vulnerability which allows arbitrary signing 
 # Generated from https://mkjwk.org/
 
@@ -35,14 +39,14 @@ YTbcHdJfY/ZhA5BP9JT5eY0=
 -----END PRIVATE KEY-----"""
 
 def generate_token(username):
-    return jwt.encode({"username": username, "admin": "false", "iat": int(time.time())}, PRIV_KEY, algorithm="RS256", headers={"jku": "http://localhost:5000/public_keys.json", "kid": "Nzv4oc46mMpaVnzKHKzTmh2Ajip_ITEGZLoGCbkZBIg"})
+    return safejwt_sign.encode({"username": username, "admin": "false", "iat": int(time.time())}, PRIV_KEY, algorithm="RS256", headers={"jku": "http://localhost:5000/public_keys.json", "kid": "Nzv4oc46mMpaVnzKHKzTmh2Ajip_ITEGZLoGCbkZBIg"})
 
 def validate_token(token):
     try:
         headers = jwt.get_unverified_header(token)
         jwks_client = PyJWKClient(headers["jku"])
         pub_key = jwks_client.get_signing_key_from_jwt(token)
-        data = jwt.decode(token, pub_key.key, algorithms=["RS256"])
+        data = safejwt_sign.decode(token, pub_key.key, algorithms=["RS256"])
         is_admin = (data["admin"] == "true")
         return is_admin
     except:

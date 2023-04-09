@@ -2,6 +2,8 @@ import jwt
 from jwt import PyJWK
 import time 
 
+import safejwt
+
 # Generate from Burp Suite 
 key = {
     "p": "_27nIEMA9xVZopw5Ab6R2zpilvz4CB17wu1rRAOH1rq_aULwyB4OfPfDkdO_QDUNK9eMARmoSyNQzhR2cOA-55Ea0cQ34wQ08zQ1hB-Z8Oovv2LJWoUqbW0ac9i7r0fKA_v3PVGrLaPvvgdxlx3nd-VyjGaAwNJd_uljS8F1wOE",
@@ -23,15 +25,17 @@ pub_key = {
     "n": "uEhz3iAuN_etlzYTdiMNBCC18ibi2x1Jz7JM3iZT1K1Ph-bzJu6DYDkJZWarZ4fGenMIZHx8zae-xULE2IEfCuXoGeBiExLLGSD-mJQ5vmjdeajuo0V9dQMvElnvYgxc4AIheJPOqmJVA3DMAUJcXMzbLnWh3MWMDUNTqcFK4zihGPmTkk9luJLqE5LNADclweORq-vqHKOC3vKE_r4AQWKp7T2y2HoW7Q8pMJ8tq3md1yIO5Pi1EJvfJ0U-iJQmAOXy3ePvVE0Lh-uo_YfqW4NoMSVBlyfuY8AARmLGFlWOoOgp1jV0gICDwwTQDZ5tVueDtN_G-TigKrVT_Y1Z2Q"
 }
 
+safejwt_sign = safejwt.SafeJWT(jwk_whitelist=[pub_key])
+
 def generate_token(username):
     signing_key = PyJWK.from_dict(key).key
-    return jwt.encode({"username": username, "admin": "false", "iat": int(time.time())}, signing_key, algorithm="RS256", headers={"jwk": pub_key})
+    return safejwt_sign.encode({"username": username, "admin": "false", "iat": int(time.time())}, signing_key, algorithm="RS256", headers={"jwk": pub_key})
 
 def validate_token(token):
     try:
         headers = jwt.get_unverified_header(token)
         signing_key = PyJWK.from_dict(headers["jwk"])
-        data = jwt.decode(token, signing_key.key, algorithms=["RS256"])
+        data = safejwt_sign.decode(token, signing_key.key, algorithms=["RS256"])
         is_admin = (data["admin"] == "true")
         return is_admin
     except:
