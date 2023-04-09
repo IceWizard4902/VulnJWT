@@ -13,6 +13,9 @@ The project is in the CS5331 module in NUS.
 
 TODO later: Include some Docker containers to simplify the process of installation.
 
+## Exploit
+- Some sample "evil" servers are provided in the `attack_poc` folder. In order to understand how to exploit the vulnerabilities in our sample application, again, please check out the [PortSwigger Academy JWT lab](https://portswigger.net/web-security/jwt). After finishing the lab, you should be able to exploit the program using Burp Suite.
+
 ## Mitigation
 
 - The `SafeJWT` tool, which helps defend against the injection attacks, using whitelisting is in the `mitigation` branch. The application's vulnerable logic (in the `jku.py`, `jwk.py` and `kid.py` files) are fixed.
