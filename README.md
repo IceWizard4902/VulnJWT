@@ -1,4 +1,12 @@
-# VulnJWT
+# VulnJWT (Mitigation)
+
+## What is the tool about?
+
+The tool is in the `safejwt.py` file. 
+
+- The `SafeJWT` tool is essentially a wrapper for the two common methods in the `pyjwt` library, `encode` and `decode`. 
+- The tool attempts to stop the injection-related JWT attacks by doing whitelisting of only the keys needed for the application, as a normal web application should only need a few selected keys.
+- The tool also stops the `none` algorithm attacks, and the use of commonly guessed `jwt` secrets, which should be listed in the `jwt_common_secret.txt` file. Note that an attacker can employ other list of words 
 
 ## What is this about?
 
