@@ -4,7 +4,9 @@
 
 This is a Flask application which is vulnerable to some JWT injection attacks. The attacks are inspired from the [PortSwigger Academy JWT lab](https://portswigger.net/web-security/jwt).
 
-The project is in the CS5331 module in NUS.
+The project is in the CS5331 module in NUS. 
+
+See the demo at this [Youtube link](https://www.youtube.com/watch?v=WO0e9H_qoBo)
 
 ## How to run?
 - Install the necessary modules by doing `pip install -r requirements.txt`
